@@ -16,12 +16,10 @@ class PagesController < ApplicationController
 
     @result = []
 
-    3.times do |n|
+    2.times do |n|
       uri = URI.parse("https://9b199e13.prtimes.tech/date_period/#{from}/#{today}/#{n + 1}")
-
-      @a =
       json = Net::HTTP.get(uri) #NET::HTTPを利用してAPIを叩く
-      @a = JSON.parse(json)["data"].each do |pr|
+      JSON.parse(json)["data"].each do |pr|
         @result << pr
       end
     end
