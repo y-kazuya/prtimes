@@ -1,35 +1,3 @@
-<<<<<<< Updated upstream
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta http-equiv="content-type" charset="UTF-8">
-<link rel="stylesheet" href="stylt.css">
-<title>summary</title>
-<style>
-h1{
-    color:white;
-    background-color:#485ECA;
-}
-</style>
-</head>
-<body>
-<script type="text/javascript">
-for (var i = 0; i < 10; i++){
-   	document.write("<h1>タイトル</h1>");
-	document.write(`
-	 <div style="position: relative;">
-	 <img src="http://placehold.jp/720x480.png">
-	 <div style="position:absolute; top:420px; left:600px; width: 90px;">
-	 <p style="font-size:20px"><p style="background-color:white">～配信日～</p></p>
-	 </div></div>
-	`);
-	document.write("<h2>提供：企業名</h2>");
-}
-</script>
-</body>
-</html>
-=======
-
 
 <h1> 検索結果</h1>
 <div style="text-align:center; position: relative;">
@@ -37,13 +5,11 @@ for (var i = 0; i < 10; i++){
   <h3 style="display: inline"><%= "駅名：#{@ekimei}" %></h3> <br>
   <h3 style="display: inline"><%= "指定距離：#{@kyori / 1000}km" %></h3><br>
     <%= link_to "検索へ戻る", root_path %>
+    <%= @cate %>
 </div>
 
-<%= "駅名：#{@time}" %>
 
-
-
-<%- @finish.each do |pr| %>
+<%= @finish.each do |pr| %>
   <% url = "https://prtimes.jp/main/html/rd/p/#{pr['company_id']}.#{pr['release_id']}.html" %>
   <h1><%= pr["title"] %></h1>
   <div style="text-align:center; position: relative;">
@@ -56,6 +22,8 @@ for (var i = 0; i < 10; i++){
    <p style="width: 700px;margin: 20px auto">
     <%= "会場：#{pr['address'][0]}" %>
    </p>
+
+   <p><%= "#{@ekimei}から#{pr['distance']['text']}です" %></p>
 
    <div style="position:absolute; width: 90px;">
     <p style="font-size:20px"><p style="background-color:white"><%= pr["created_at"] %></p></p>
@@ -74,7 +42,7 @@ for (var i = 0; i < 10; i++){
   <%= link_to "#{pg[0]}",summary_path(page: pg[0]) %>
 <% end %>
 
-<% if @finish.length >= 5 %>
+<% if @finish.length != 0 %>
   <%= link_to "次へ",summary_path(page: @page.to_i + 1, ekimei:@ekimei, kyori: @kyori,cate: @cate) %>
 <% end %>
 
@@ -92,18 +60,3 @@ h2{
    text-align: right;
 }
 </style>
-<%# </head>
-<body>
-<script type="text/javascript">
-for (var i = 0; i < 10; i++){
-  document.write(`
-   <div style="text-align:center;">
-   <img src="http://placehold.jp/720x480.png">
-   <div style="position:absolute; top:500px; left:780px; width: 90px;">
-   <p style="font-size:20px"><p style="background-color:white">～配信日～</p></p>
-   </div></div>
-  `);
-  document.write("<h2>提供：企業名</h2>");
-}
-</script> %>
->>>>>>> Stashed changes

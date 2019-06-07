@@ -25,6 +25,7 @@ class PagesController < ApplicationController
     @end = true
     @page = 1 unless @page
     @page = params[:page]
+    @cate = params[:cate].to_i if @cate
     @pg = @@page_number
     @page_results =  @@page_result
 
@@ -80,21 +81,28 @@ class PagesController < ApplicationController
       break if Time.now - start_time > 20
 
       @@page_number += 1
-        uri = URI.parse("https://9b199e13.prtimes.tech/date_period/#{from}/#{today}/#{@@page_number}")
-        json = Net::HTTP.get(uri) #NET::HTTPを利用してAPIを叩く
-        break if JSON.parse(json)["data"] == []
+      uri = URI.parse("https://9b199e13.prtimes.tech/date_period/#{from}/#{today}/#{@@page_number}")
+      json = Net::HTTP.get(uri) #NET::HTTPを利用してAPIを叩く
+      break if JSON.parse(json)["data"] == []
 
-        JSON.parse(json)["data"].each do |pr|
 
-          url = URI.parse("https://9b199e13.prtimes.tech/detail/#{pr['company_id'].to_i}/#{pr['release_id'].to_i}/")
-          json = Net::HTTP.get(url)
-          if (JSON.parse(json)["data"]["address"] != [] || JSON.parse(json)["data"]["address"][0] != nil)
-            prpr= JSON.parse(json)["data"]
-            prpr["company_id"] = JSON.parse(json)["company_id"]
-            prpr["release_id"] = JSON.parse(json)["release_id"]
-            @result << prpr unless @result.include?(prpr)
+      JSON.parse(json)["data"].each do |pr|
 
+        url = URI.parse("https://9b199e13.prtimes.tech/detail/#{pr['company_id'].to_i}/#{pr['release_id'].to_i}/")
+        json = Net::HTTP.get(url)
+
+        if (JSON.parse(json)["data"]["address"] != [] || JSON.parse(json)["data"]["address"][0] != nil)
+          prpr= JSON.parse(json)["data"]
+          prpr["company_id"] = JSON.parse(json)["company_id"]
+          prpr["release_id"] = JSON.parse(json)["release_id"]
+          if @cate
+            @result << prpr if prpr["main_category_id"] == @cate || !@result.include?(prpr)
+          else
+            @result << prpr if !@result.include?(prpr)
           end
+
+        end
+
       end #@result 期間（三ヶ月以内と、住所があるかどうか、カテゴリー一致してるかどうかで絞ってる"main_category_id"
 
 
@@ -122,12 +130,17 @@ class PagesController < ApplicationController
       end
     end
 
+    render action: :noshow if @finish.length == 0
     @@page_result << [@page,@finish]
     @page_results = @@page_result
     @page = @page.to_i
     @params = params["category"]
     @time = Time.now - start_time
     @finish
+
+  end
+
+  def noshow
 
   end
 end
