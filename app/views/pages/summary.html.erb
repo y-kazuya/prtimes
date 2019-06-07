@@ -1,41 +1,29 @@
-
-
-<h1> 区切り</h1>
-<%= @finish.length %>
-<%=@pg %>
-<%= @d1 %>
-
-<h1> 区切り</h1>
-
-<%= @finish %>
-
-
-
-<% if @page.to_i > 1 %>
-  <%= link_to "戻る",summary_path(page: @page.to_i - 1) %>
-<% end %>
-
-<%- @page_results.each do |pg| %>
-  <%= link_to "#{pg[0]}",summary_path(page: pg[0]) %>
-<% end %>
-
-<% if @end %>
-  <%= link_to "次へ",summary_path(page: @page.to_i + 1) %>
-<% end %>
-<%# <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta http-equiv="content-type" charset="UTF-8">
-<link rel="stylesheet" href="stylt.css"> %>
-<%# <title>summary</title>
-</head> %>
-<%# <body> %>
-<h1>タイトル</h1>
-<div style="position: relative;">
-<img src="http://placehold.jp/720x480.png">
-<div style="position:absolute; top:420px; left:600px; width: 90px;">
-<p style="font-size:20px"><p style="background-color:white">～配信日～</p></p>
-</div></div>
-<h2>提供：企業名</h2>
-<%# </body>
-</html> %>
+<link rel="stylesheet" href="stylt.css">
+<title>summary</title>
+<style>
+h1{
+    color:white;
+    background-color:#485ECA;
+}
+</style>
+</head>
+<body>
+<script type="text/javascript">
+for (var i = 0; i < 10; i++){
+   	document.write("<h1>タイトル</h1>");
+	document.write(`
+	 <div style="position: relative;">
+	 <img src="http://placehold.jp/720x480.png">
+	 <div style="position:absolute; top:420px; left:600px; width: 90px;">
+	 <p style="font-size:20px"><p style="background-color:white">～配信日～</p></p>
+	 </div></div>
+	`);
+	document.write("<h2>提供：企業名</h2>");
+}
+</script>
+</body>
+</html>
