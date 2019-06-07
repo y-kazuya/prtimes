@@ -11,14 +11,17 @@
   <body onload="HRELoadArea('area', 'line', 'station');">
 
     <div class="rail">
-       <img src="rail.png"/>
+       <%= image_tag 'rail.png'%>
        <div class="tram">
-         <img id="tram" src="tram.png"/ >
+         <%# <img id="tram" src="tram.png"/ > %>
+         <%= image_tag 'tram.png', id: "tram" %>
        </div>
     </div>
     <div class="rep"><h3> 駅から探すPR </h3></div>
 
-    <div class="boxforinput">        
+
+    <%=  form_tag'/summary?page=1', :method => :get do |f| %>
+       <div class="boxforinput">
     駅を選んで下さい<br>
         <select id="area" name="area" onchange="HREOnChangeArea();">
           <option value="エリア">エリア</option>
@@ -26,15 +29,13 @@
         <select id="line" name="line" onchange="HREOnChangeLine();">
          <option value="路線">路線</option>
         </select><br>
-        <select id="station" name="station">
+        <select id="station" name="eki">
           <option value="駅">駅</option>
         </select><br>
-
-        <form name="info">
           <!--           カテゴリ<input type="text" name="ctg"><b> -->
 
           カテゴリーを選んで下さい<br>
-            <select id="category" name="category">
+            <select id="category" name="cate">
             <option value="003">流通</option>
             <option value="004">エンタテイメント</option>
             <option value="005">スポーツ・アウトドア</option>
@@ -54,13 +55,12 @@
           <input type="text" id="dis" name="dis">kmまで<br>
 
           <div class="bt">
-            <a href="#" class="btn-open" onclick="givedt()">Go!</a>
+            <a class="btn-open">
+              <%= submit_tag "Go!",class: "bt_text" %>
+            </a>
           </div>
-
-        </form>
-    </div>
-
-
+      </div>
+    <% end %>
   <script>
     var area=document.querySelector("#area");
     var line=document.querySelector("#line");
@@ -92,7 +92,7 @@
     });
 
 
-    function givedt(){
+function givedt(){
       var d=document.info.dis.value;
       var stn=document.getElementById("station").value;
       var cat=document.getElementById("category").value;
@@ -105,5 +105,4 @@
       }
   </script>
 
-  </body>
 </html>

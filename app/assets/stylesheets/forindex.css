@@ -92,3 +92,19 @@ header{
   height: 340%;
   opacity: 1;
 }
+
+.bt_text {
+  background-color: #485ECA;
+  box-sizing: border-box;
+  border: 0px;
+  font-size: 16px;
+  line-height: 30px;
+  color: #FFF;
+  font-family: 'arial black','Impact';
+}
+
+.btn-open:hover .bt_text {
+  background-color: rgba(0,0,0,0);
+  color: #485ECA;
+
+}

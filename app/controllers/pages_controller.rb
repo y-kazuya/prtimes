@@ -1,25 +1,54 @@
 class PagesController < ApplicationController
   API_KEY = "AIzaSyAu--Z2zo37olt65ga_kQ2rJLBzNT_u6Ys"
-  PAGE_RESULTS = []
+  @@page_result = []
+
   MAX_ONCE = 5
-  $store_pres = []
-  $page_number = 0
+  @@store_pres = []
+  @@page_number = 0
   def index
 
   end
 
   def summary
+
+
+
+    if params['eki']
+      @@store_pres = []
+      @@page_result = []
+      @@page_number = 0
+      @ekimei = params['eki'] + "駅"
+    else
+      @ekimei = params['ekimei']
+    end
     #期間は3ヶ月
     @end = true
-    @page = 0 unless @page
+    @page = 1 unless @page
     @page = params[:page]
-    @pg = $page_number
-    @page_results = PAGE_RESULTS
+    @pg = @@page_number
+    @page_results =  @@page_result
 
     @finish = []
     @d1 = "1"
 
-    PAGE_RESULTS.each do |page_result|
+    if params['eki']
+      @ekimei = params['eki'] + "駅"
+    else
+      @ekimei = params['ekimei']
+    end
+
+    if params["dis"]
+      @kyori = params["dis"].to_i * 1000
+    else
+      @kyori= params['kyori'].to_i
+    end
+
+    @cate = params["cate"].to_i
+
+    ago = 3
+
+
+    @@page_result.each do |page_result|
       if page_result[0] == @page
         @finish =  page_result[1]
       end
@@ -28,31 +57,30 @@ class PagesController < ApplicationController
     return @finish if @finish.length != 0
 
 
-    # if $store_pres != []
-    #   @finish = $store_pres
-    #   $store_prs = Array.new
-    # end
+    if @@store_pres != []
+      @finish = @@store_pres
+      @@store_pres = []
+    end
 
-    # @d1 = "2"
+    if @finish.length >=  MAX_ONCE
+      @@page_result << [@page,@finish]
+    end
 
-    # return @finish if @finish.length != 0
+    return @finish if @finish.length >=  MAX_ONCE
 
-    ekimei = "新宿"
-    category = 2
-    kyroi = 3
-    ago = 3
+
 
     #今日から3ヶ月前までのPRを取得
     today = Date.today
     from = Time.current.ago(ago.month).to_s.split(" ")[0]
 
     @result = []
-
-
-    @d1 ="3"
+    start_time = Time.now
     until @finish.length >= MAX_ONCE
-      $page_number += 1
-        uri = URI.parse("https://9b199e13.prtimes.tech/date_period/#{from}/#{today}/#{$page_number}")
+      break if Time.now - start_time > 20
+
+      @@page_number += 1
+        uri = URI.parse("https://9b199e13.prtimes.tech/date_period/#{from}/#{today}/#{@@page_number}")
         json = Net::HTTP.get(uri) #NET::HTTPを利用してAPIを叩く
         break if JSON.parse(json)["data"] == []
 
@@ -61,9 +89,13 @@ class PagesController < ApplicationController
           url = URI.parse("https://9b199e13.prtimes.tech/detail/#{pr['company_id'].to_i}/#{pr['release_id'].to_i}/")
           json = Net::HTTP.get(url)
           if (JSON.parse(json)["data"]["address"] != [] || JSON.parse(json)["data"]["address"][0] != nil)
-            @result << JSON.parse(json)["data"]
+            prpr= JSON.parse(json)["data"]
+            prpr["company_id"] = JSON.parse(json)["company_id"]
+            prpr["release_id"] = JSON.parse(json)["release_id"]
+            @result << prpr unless @result.include?(prpr)
+
           end
-      end #@result 期間（三ヶ月以内と、住所があるかどうか、カテゴリー一致してるかどうかで絞ってる
+      end #@result 期間（三ヶ月以内と、住所があるかどうか、カテゴリー一致してるかどうかで絞ってる"main_category_id"
 
 
 
@@ -72,26 +104,29 @@ class PagesController < ApplicationController
         if pr["address"][0] != nil
 
           address = pr["address"][0].gsub(" ", "")
-          uri = Addressable::URI.parse("https://maps.googleapis.com/maps/api/directions/json?origin=#{ekimei}&destination=#{address}&key=#{API_KEY}")
+          uri = Addressable::URI.parse("https://maps.googleapis.com/maps/api/directions/json?origin=#{@ekimei}&destination=#{address}&key=#{API_KEY}")
           json = Net::HTTP.get(uri)
 
-          if kyroi < JSON.parse(json)["routes"][0]["legs"][0]["distance"]["value"]
+          return unless JSON.parse(json)["routes"][0] && JSON.parse(json)["routes"][0]["legs"][0]
+
+          if @kyori > JSON.parse(json)["routes"][0]["legs"][0]["distance"]["value"]
               pr["distance"] = JSON.parse(json)["routes"][0]["legs"][0]["distance"]
               if  @finish.length >= MAX_ONCE
-                 $store_pres << pr
+                 @@store_pres << pr
               else
-                 @finish << pr
+
+                 @finish << pr unless @finish.include?(pr)
               end
           end
         end
       end
     end
 
-    @finish.length >= MAX_ONCE ? @end = true : @end = false
-    @d1 ="4"
-    PAGE_RESULTS << [@page,@finish]
-    @page_results = PAGE_RESULTS
+    @@page_result << [@page,@finish]
+    @page_results = @@page_result
     @page = @page.to_i
+    @params = params["category"]
+    @time = Time.now - start_time
     @finish
 
   end
