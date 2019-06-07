@@ -1,5 +1,23 @@
-<%= @finish%>
+
+<h1> 区切り</h1>
+<%= @finish.length %>
+<%=@pg %>
+<%= @d1 %>
 
 <h1> 区切り</h1>
 
-<%= @result%>
+<%= @finish %>
+
+
+
+<% if @page.to_i > 1 %>
+  <%= link_to "戻る",summary_path(page: @page.to_i - 1) %>
+<% end %>
+
+<%- @page_results.each do |pg| %>
+  <%= link_to "#{pg[0]}",summary_path(page: pg[0]) %>
+<% end %>
+
+<% if @end %>
+  <%= link_to "次へ",summary_path(page: @page.to_i + 1) %>
+<% end %>
