@@ -122,3 +122,26 @@ header{
   color: #485ECA;
 
 }
+
+#loading{
+position: absolute;
+left: 50%;
+top: 30%;
+}
+#loader-bg {
+position: fixed;
+width: 100%;
+height: 100%;
+top: 0px;
+left: 0px;
+background: #FFF;
+z-index: 1;
+}
+body{
+background-color: #ccc;
+}
+#main-contents{
+text-align: center;
+margin-top: 20%;
+margin-top: 0;
+}

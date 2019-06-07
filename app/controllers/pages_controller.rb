@@ -25,7 +25,7 @@ class PagesController < ApplicationController
     @end = true
     @page = 1 unless @page
     @page = params[:page]
-    @cate = params[:cate].to_i if @cate
+    @cate = params[:cate]
     @pg = @@page_number
     @page_results =  @@page_result
 
@@ -43,8 +43,6 @@ class PagesController < ApplicationController
     else
       @kyori= params['kyori'].to_i
     end
-
-    @cate = params["cate"].to_i
 
     ago = 3
 
@@ -96,8 +94,9 @@ class PagesController < ApplicationController
           prpr["company_id"] = JSON.parse(json)["company_id"]
           prpr["release_id"] = JSON.parse(json)["release_id"]
           if @cate
-            @result << prpr if prpr["main_category_id"] == @cate || !@result.include?(prpr)
+            @result << prpr if prpr["main_category_id"].to_i == @cate.to_i || !@result.include?(prpr)
           else
+            @b = 1
             @result << prpr if !@result.include?(prpr)
           end
 
