@@ -2,7 +2,7 @@
 <html>
   <head>
     <script type="text/javascript" src="http://express.heartrails.com/api/express.js"></script>
-    <title> サンプルページ</title>
+    <!--<title> 駅から探すPR</title>-->
     <meta http-equiv="content-type" charset="utf-8">
     <link rel="stylesheet" href="../../assets/stylesheets/forindex.css">
   </head>
@@ -16,6 +16,7 @@
          <img id="tram" src="tram.png"/ >
        </div>
     </div>
+    <div class="rep"><h3> 駅から探すPR </h3></div>
 
     <div class="boxforinput">        
     駅を選んで下さい<br>
@@ -68,20 +69,26 @@
     var din=document.getElementById( "dis" ) ;
 
     var tr=document.getElementById('tram');
+    var mv=0;
+
+    function movetram(){
+      mv+=64;
+      tr.style.webkitTransform = 'translateX('+mv+'px)';
+    }
     area.addEventListener('change', function(){
-      tr.style.webkitTransform = "translateX(64px)";
+      movetram();
     });
     line.addEventListener('change', function(){
-      tr.style.webkitTransform = "translateX(128px)";
+      movetram();
     });
     station.addEventListener('change', function(){
-      tr.style.webkitTransform = "translateX(192px)";
+      movetram();
     });
     category.addEventListener('change', function(){
-      tr.style.webkitTransform = "translateX(256px)";
+      movetram();
     });
     din.addEventListener('input', function(){
-      tr.style.webkitTransform = "translateX(320px)";
+      movetram();
     });
 
 
