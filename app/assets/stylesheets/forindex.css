@@ -19,6 +19,20 @@ header{
   background: #485ECA;
   color: white;
 }
+.come{
+   display:none;
+ }
+ #tram:hover + .come{
+   font-size: 75%;
+ 
+   width: 300px;
+   background: #eee8aa;
+   display: block;
+   position: absolute;
+   text-align: left;
+   padding: 20px;
+ }
+
 
 .rail{
   position: relative;
