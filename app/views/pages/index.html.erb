@@ -1,3 +1,102 @@
-<%= @test%>
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="http://express.heartrails.com/api/express.js"></script>
+    <title> サンプルページ</title>
+    <meta http-equiv="content-type" charset="utf-8">
+    <link rel="stylesheet" href="../../assets/stylesheets/forindex.css">
+  </head>
 
-<%= link_to "結果へ", summary_path%>
+
+  <body onload="HRELoadArea('area', 'line', 'station');">
+
+    <div class="rail">
+       <img src="rail.png"/>
+       <div class="tram">
+         <img id="tram" src="tram.png"/ >
+       </div>
+    </div>
+
+    <div class="boxforinput">        
+    駅を選んで下さい<br>
+        <select id="area" name="area" onchange="HREOnChangeArea();">
+          <option value="エリア">エリア</option>
+        </select><br>
+        <select id="line" name="line" onchange="HREOnChangeLine();">
+         <option value="路線">路線</option>
+        </select><br>
+        <select id="station" name="station">
+          <option value="駅">駅</option>
+        </select><br>
+
+        <form name="info">
+          <!--           カテゴリ<input type="text" name="ctg"><b> -->
+
+          カテゴリーを選んで下さい<br>
+            <select id="category" name="category">
+            <option value="003">流通</option>
+            <option value="004">エンタテイメント</option>
+            <option value="005">スポーツ・アウトドア</option>
+            <option value="007">出版・アート・カルチャー</option>
+            <option value="008">ゲーム・おもちゃ</option>
+            <option value="010">インテリア・雑貨</option>
+            <option value="012">アパレル・ファッション</option>
+            <option value="014">美容・健康</option>
+            <option value="018">教育・資格・人材</option>
+            <option value="019">ホテル・レジャー</option>
+            <option value="024">外食・中食</option>
+            <option value="026">暮らし</option>
+            <option value="028">交通・運輸・輸送</option>
+          </select><br>
+
+          駅からの距離<br>
+          <input type="text" id="dis" name="dis">kmまで<br>
+
+          <div class="bt">
+            <a href="#" class="btn-open" onclick="givedt()">Go!</a>
+          </div>
+
+        </form>
+    </div>
+
+
+  <script>
+    var area=document.querySelector("#area");
+    var line=document.querySelector("#line");
+    var station=document.querySelector("#station");
+    var category=document.querySelector("#category");
+    var din=document.getElementById( "dis" ) ;
+
+    var tr=document.getElementById('tram');
+    area.addEventListener('change', function(){
+      tr.style.webkitTransform = "translateX(64px)";
+    });
+    line.addEventListener('change', function(){
+      tr.style.webkitTransform = "translateX(128px)";
+    });
+    station.addEventListener('change', function(){
+      tr.style.webkitTransform = "translateX(192px)";
+    });
+    category.addEventListener('change', function(){
+      tr.style.webkitTransform = "translateX(256px)";
+    });
+    din.addEventListener('input', function(){
+      tr.style.webkitTransform = "translateX(320px)";
+    });
+
+
+    function givedt(){
+      var d=document.info.dis.value;
+      var stn=document.getElementById("station").value;
+      var cat=document.getElementById("category").value;
+      if(isNaN(d)){
+        alert('距離には半角数字を入力して下さい');
+      }
+      else{
+        alert(d+' '+stn+' '+cat);
+      }
+      }
+  </script>
+
+  </body>
+</html>
